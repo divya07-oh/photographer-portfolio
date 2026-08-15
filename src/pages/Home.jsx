@@ -1,12 +1,17 @@
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { getFeaturedProjects, CATEGORIES } from '../data/portfolioService';
-import { ArrowRight } from 'lucide-react';
+import { useEffect } from 'react';
+import { motion } from 'framer-motion'; 
+import { Link } from 'react-router-dom'; 
+import { getFeaturedProjects, CATEGORIES } from '../data/portfolioService'; 
+import { ArrowRight } from 'lucide-react'; 
 import clsx from 'clsx';
+import { testSupabaseConnection } from '../services/testSupabase';
+
 
 const Home = () => {
   const featuredProjects = getFeaturedProjects();
-
+  useEffect(() => {
+    testSupabaseConnection();
+  }, []);
   return (
     <div className="bg-cream">
       {/* 1. Cinematic Hero */}
