@@ -1,16 +1,31 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion'; 
 import { Link } from 'react-router-dom'; 
-import { getFeaturedProjects, CATEGORIES } from '../data/portfolioService'; 
-import { ArrowRight } from 'lucide-react'; 
+import { fetchFeaturedProjects, CATEGORIES } from '../data/portfolioService'; 
+import { ArrowRight, Loader2 } from 'lucide-react'; 
 import clsx from 'clsx';
 import { testSupabaseConnection } from '../services/testSupabase';
 
 
 const Home = () => {
-  const featuredProjects = getFeaturedProjects();
+  const [featuredProjects, setFeaturedProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     testSupabaseConnection();
+    
+    const loadProjects = async () => {
+      try {
+        const data = await fetchFeaturedProjects();
+        setFeaturedProjects(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadProjects();
   }, []);
   return (
     <div className="bg-cream">
@@ -90,17 +105,45 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 3. Featured Work */}
-      <section className="py-20 px-4 md:px-8 max-w-7xl mx-auto">
-        <div className="flex justify-between items-end mb-16">
-          <h2 className="font-serif text-4xl text-primary">Selected Works</h2>
-          <Link to="/portfolio" className="text-sm uppercase tracking-widest border-b border-primary text-primary hover:text-primary-dark transition-colors hidden md:block">
-            View All Projects
-          </Link>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
-          {featuredProjects.map((project, index) => (
+      {/* 4. Featured Work (Dynamic Supabase) */}
+      <div className="py-24 bg-white/50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-end mb-16">
+            <div>
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="font-serif text-4xl md:text-5xl text-dark mb-4"
+              >
+                FEATURED WORK
+              </motion.h2>
+              <p className="text-dark/60 font-light tracking-wide max-w-md">
+                A curated selection of my favorite moments and editorial pieces.
+              </p>
+            </div>
+            <Link 
+              to="/portfolio"
+              className="hidden md:flex items-center space-x-2 text-sm uppercase tracking-widest text-primary hover:text-dark transition-colors"
+            >
+              <span>View All</span>
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          {loading ? (
+            <div className="flex justify-center items-center py-20 text-dark/50">
+              <Loader2 className="animate-spin w-8 h-8 mr-3" />
+              <span className="uppercase tracking-widest text-sm">Loading projects...</span>
+            </div>
+          ) : featuredProjects.length === 0 ? (
+            <div className="text-center py-20 bg-cream/30 rounded border border-dark/5">
+              <p className="text-dark/50 font-light tracking-wide">No featured projects available yet.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+              <pre className="col-span-full overflow-auto bg-black text-green-400 p-4 text-xs">{JSON.stringify(featuredProjects, null, 2)}</pre>
+              {featuredProjects.map((project, index) => (
             <motion.div 
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -127,12 +170,9 @@ const Home = () => {
             </motion.div>
           ))}
         </div>
-        <div className="mt-12 text-center md:hidden">
-           <Link to="/portfolio" className="text-sm uppercase tracking-widest border-b border-primary text-primary">
-            View All Projects
-          </Link>
+          )}
         </div>
-      </section>
+      </div>
 
       {/* 4. Contact CTA */}
       <section className="bg-primary text-cream py-32 px-4 text-center">

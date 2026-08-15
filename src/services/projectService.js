@@ -7,11 +7,24 @@ const mapToUI = (dbProject, dbImages = []) => {
   if (!dbProject) return null;
   
   // Format images array for the UI
-  const images = dbImages.map(img => ({
-    id: img.id,
-    url: img.image_url,
-    // We don't have the File object since it's already uploaded
-  }));
+  const images = dbImages.map(img => {
+    let finalUrl = img.image_url;
+    if (finalUrl && !finalUrl.startsWith('http')) {
+      const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(finalUrl);
+      finalUrl = data.publicUrl;
+    }
+    return {
+      id: img.id,
+      image_url: finalUrl, // Keep actual database property
+      url: finalUrl // Compatibility with management UI
+    };
+  });
+
+  let finalCover = dbProject.cover_image || null;
+  if (finalCover && !finalCover.startsWith('http')) {
+    const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(finalCover);
+    finalCover = data.publicUrl;
+  }
 
   return {
     id: dbProject.id,
@@ -19,7 +32,7 @@ const mapToUI = (dbProject, dbImages = []) => {
     category: dbProject.category || '',
     year: dbProject.year || '',
     description: dbProject.description || '',
-    coverImage: dbProject.cover_image || null,
+    coverImage: finalCover,
     images: images
   };
 };
@@ -82,14 +95,19 @@ export const projectService = {
   async getProjects() {
     const { data, error } = await supabase
       .from('projects')
-      .select('*')
+      .select('*, project_images(*)')
       .order('created_at', { ascending: false });
 
     if (error) {
       console.error('Supabase getProjects error:', error);
       throw error;
     }
-    return (data || []).map(p => mapToUI(p, []));
+    
+    return (data || []).map(p => {
+      // Sort images by display_order
+      const images = (p.project_images || []).sort((a, b) => a.display_order - b.display_order);
+      return mapToUI(p, images);
+    });
   },
 
   // Get project by ID (includes fetching project_images)

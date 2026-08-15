@@ -1,5 +1,6 @@
 // Mock Data Service
 import React from 'react';
+import { projectService } from '../services/projectService';
 
 export const CATEGORIES = ['ALL', 'WEDDING', 'ENGAGEMENT', 'MATERNITY', 'BIRTHDAY CELEBRATION'];
 
@@ -127,11 +128,48 @@ export const TESTIMONIALS = [
   }
 ];
 
-export const getFeaturedProjects = () => PROJECTS.slice(0, 4);
+// Helper to convert projectService format to public portfolio format
+const mapToPortfolio = (project) => {
+  if (!project) return null;
+  // Fallback to first image if no coverImage
+  const coverImage = project.coverImage || (project.images && project.images.length > 0 ? project.images[0].image_url : '');
+  const gallery = project.images ? project.images.map(img => img.image_url) : [];
+  
+  return {
+    ...project,
+    coverImage,
+    gallery
+  };
+};
 
-export const getProjectById = (id) => PROJECTS.find(p => p.id === id);
+export const fetchFeaturedProjects = async () => {
+  try {
+    const projects = await projectService.getProjects();
+    return projects.slice(0, 4).map(mapToPortfolio);
+  } catch (error) {
+    console.error('Error fetching featured projects:', error);
+    return []; // Return empty array on error so UI doesn't crash
+  }
+};
 
-export const getProjectsByCategory = (category) => {
-  if (category === 'ALL') return PROJECTS;
-  return PROJECTS.filter(p => p.category === category);
+export const fetchProjectById = async (id) => {
+  try {
+    const project = await projectService.getProjectById(id);
+    return mapToPortfolio(project);
+  } catch (error) {
+    console.error('Error fetching project details:', error);
+    return null;
+  }
+};
+
+export const fetchProjectsByCategory = async (category) => {
+  try {
+    const projects = await projectService.getProjects();
+    const mapped = projects.map(mapToPortfolio);
+    if (category === 'ALL') return mapped;
+    return mapped.filter(p => p.category.toUpperCase() === category.toUpperCase());
+  } catch (error) {
+    console.error('Error fetching projects by category:', error);
+    return [];
+  }
 };
