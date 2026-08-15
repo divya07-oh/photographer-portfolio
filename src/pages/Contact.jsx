@@ -53,17 +53,17 @@ const Contact = () => {
             </div>
 
             <div className="space-y-6 text-dark/80 font-light">
-              <a href="mailto:hello@muraliragavan.com" className="flex items-center space-x-4 hover:text-primary transition-colors group">
+              <a href="mailto:themarvelousphotography@gmail.com" className="flex items-center space-x-4 hover:text-primary transition-colors group">
                 <div className="w-12 h-12 bg-primary/5 rounded-full flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                   <Mail size={20} className="text-primary" />
                 </div>
-                <span className="text-lg">hello@muraliragavan.com</span>
+                <span className="text-lg">themarvelousphotography@gmail.com</span>
               </a>
-              <a href="tel:+1234567890" className="flex items-center space-x-4 hover:text-primary transition-colors group">
+              <a href="tel:7530048326" className="flex items-center space-x-4 hover:text-primary transition-colors group">
                 <div className="w-12 h-12 bg-primary/5 rounded-full flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                   <Phone size={20} className="text-primary" />
                 </div>
-                <span className="text-lg">+1 (234) 567-890</span>
+                <span className="text-lg">7530048326</span>
               </a>
               <div className="flex items-center space-x-4 group">
                 <div className="w-12 h-12 bg-primary/5 rounded-full flex items-center justify-center">
@@ -71,11 +71,11 @@ const Contact = () => {
                 </div>
                 <span className="text-lg">Based in Paris, Available Worldwide</span>
               </div>
-              <a href="#" className="flex items-center space-x-4 hover:text-primary transition-colors group">
+              <a href="https://www.instagram.com/the_marvelous_photography/" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-4 hover:text-primary transition-colors group">
                 <div className="w-12 h-12 bg-primary/5 rounded-full flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                 </div>
-                <span className="text-lg">@muraliragavan</span>
+                <span className="text-lg">@the_marvelous_photography</span>
               </a>
             </div>
           </motion.div>

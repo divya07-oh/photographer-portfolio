@@ -61,20 +61,7 @@ const Services = () => {
                   </div>
                 </Link>
 
-                {/* Optional Image Reveal on Hover (Desktop only) */}
-                <AnimatePresence>
-                  {hoveredService === service.id && service.image && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95, rotate: -2 }}
-                      animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                      exit={{ opacity: 0, scale: 0.95, rotate: -2 }}
-                      transition={{ duration: 0.4 }}
-                      className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 aspect-[4/5] pointer-events-none z-10 shadow-2xl bg-cream overflow-hidden"
-                    >
-                      <img src={service.image} alt="" className="w-full h-full object-cover" />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* Image Reveal on Hover removed as requested */}
               </motion.div>
             ))}
           </div>

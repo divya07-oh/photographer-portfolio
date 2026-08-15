@@ -31,17 +31,17 @@ const Footer = () => {
           <div className="flex flex-col items-center md:items-start space-y-4">
             <h3 className="font-sans text-sm tracking-widest uppercase text-cream/60">Connect</h3>
             <div className="flex flex-col space-y-2 items-center md:items-start">
-              <a href="mailto:hello@muraliragavan.com" className="flex items-center space-x-2 hover:text-white transition-colors">
+              <a href="mailto:themarvelousphotography@gmail.com" className="flex items-center space-x-2 hover:text-white transition-colors">
                 <Mail size={16} />
-                <span>hello@muraliragavan.com</span>
+                <span>themarvelousphotography@gmail.com</span>
               </a>
-              <a href="tel:+1234567890" className="flex items-center space-x-2 hover:text-white transition-colors">
+              <a href="tel:7530048326" className="flex items-center space-x-2 hover:text-white transition-colors">
                 <Phone size={16} />
-                <span>+1 (234) 567-890</span>
+                <span>7530048326</span>
               </a>
             </div>
             <div className="flex space-x-4 pt-4">
-              <a href="#" className="hover:text-white transition-colors">
+              <a href="https://www.instagram.com/the_marvelous_photography/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
               </a>
               <a href="#" className="hover:text-white transition-colors">
