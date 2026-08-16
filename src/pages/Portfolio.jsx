@@ -95,12 +95,12 @@ const Portfolio = () => {
                   className="group relative cursor-pointer"
                 >
                   <Link to={`/portfolio/${project.id}`} className="block">
-                    <div className="aspect-[4/5] overflow-hidden bg-cream-warm">
+                    <div className="w-full overflow-hidden bg-cream-warm flex items-center justify-center">
                       <img 
                         src={project.coverImage} 
                         alt={project.title} 
                         loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        className="w-full h-auto transition-transform duration-700 group-hover:scale-105"
                       />
                     </div>
                     <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/30 transition-colors duration-500"></div>

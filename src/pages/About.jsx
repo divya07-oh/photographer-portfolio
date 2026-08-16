@@ -14,11 +14,11 @@ const About = () => {
             transition={{ duration: 0.8 }}
             className="relative"
           >
-            <div className="aspect-[3/4] overflow-hidden">
+            <div className="aspect-[3/4] overflow-hidden bg-cream-warm">
               <img 
-                src="https://images.unsplash.com/photo-1554046920-90dcac053641?auto=format&fit=crop&q=80" 
+                src="/about-photo.jpg" 
                 alt="Photographer Portrait" 
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
             <div className="absolute -bottom-8 -right-8 w-64 h-64 bg-primary/5 -z-10 hidden md:block"></div>
@@ -34,19 +34,16 @@ const About = () => {
             <div>
               <h1 className="font-serif text-5xl md:text-6xl text-primary mb-6">About Me</h1>
               <p className="text-xl text-dark/70 font-light leading-relaxed">
-                Hi, I'm Elara. A professional photographer based in Paris, capturing moments worldwide.
+                I’m Murali Raghavan, a passionate photographer with 1 year of hands-on experience specializing in candid photography and candid videography. I love capturing genuine emotions, natural expressions, and the small moments that make every occasion memorable.
               </p>
             </div>
 
             <div className="space-y-6 text-dark/80 font-light leading-relaxed">
               <p>
-                My journey with photography began over a decade ago. What started as a fascination with light and shadow quickly evolved into a lifelong passion for storytelling. I believe that every person, every couple, and every brand has a unique narrative that deserves to be told with authenticity and elegance.
+                My approach is simple — I focus on real moments rather than posed shots, allowing people to be themselves while I capture their story naturally. From weddings and celebrations to personal portraits and special events, I aim to create photographs and videos that feel authentic, emotional, and timeless.
               </p>
               <p>
-                My approach blends documentary realism with editorial refinement. I seek those quiet, fleeting moments that often go unnoticed, transforming them into timeless visual heirlooms.
-              </p>
-              <p>
-                When I'm not behind the camera, you can find me exploring vintage film archives, curating my vinyl collection, or finding inspiration in the architecture of old European cities.
+                With a creative eye and attention to detail, I continuously explore new perspectives, lighting techniques, and storytelling styles to make every frame unique. My goal is to turn real-life moments into memories that can be relived for years to come.
               </p>
             </div>
 

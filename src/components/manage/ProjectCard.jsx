@@ -8,7 +8,7 @@ const ProjectCard = ({ project, onDeleteClick }) => {
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-dark/10 rounded overflow-hidden flex-shrink-0">
             {project.coverImage ? (
-              <img src={project.coverImage} alt={project.title} className="w-full h-full object-cover" />
+              <img src={project.coverImage} alt={project.title} className="w-full h-full object-contain" />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-dark/30 text-xs text-center leading-tight p-1">No Img</div>
             )}

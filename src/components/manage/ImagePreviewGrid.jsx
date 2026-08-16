@@ -33,7 +33,7 @@ const ImagePreviewGrid = ({ images, onRemove, onReorder, isCover = false }) => {
       {images.map((img, idx) => (
         <div 
           key={img.id || idx} 
-          className="relative group bg-dark/5 rounded-lg overflow-hidden aspect-square border border-dark/10"
+          className="relative group bg-dark/5 rounded-lg overflow-hidden border border-dark/10 flex items-center justify-center"
           draggable={!isCover}
           onDragStart={(e) => handleDragStart(e, idx)}
           onDragOver={(e) => handleDragOver(e, idx)}
@@ -42,7 +42,7 @@ const ImagePreviewGrid = ({ images, onRemove, onReorder, isCover = false }) => {
           <img 
             src={img.url || img} 
             alt="Preview" 
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
           />
           
           <div className="absolute inset-0 bg-dark/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-between p-2">

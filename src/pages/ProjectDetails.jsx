@@ -125,14 +125,16 @@ const ProjectDetails = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mb-16 cursor-pointer overflow-hidden aspect-[16/9] bg-cream-warm"
+          className="mb-16 cursor-pointer"
           onClick={() => openLightbox(0)}
         >
-          <img 
-            src={project.coverImage} 
-            alt={project.title} 
-            className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-          />
+          <div className="w-full overflow-hidden bg-cream-warm group flex items-center justify-center">
+            <img 
+              src={project.coverImage} 
+              alt={project.title} 
+              className="w-full h-auto hover:scale-105 transition-transform duration-700"
+            />
+          </div>
         </motion.div>
 
         {/* Editorial Gallery Layout */}
@@ -145,8 +147,8 @@ const ProjectDetails = () => {
               transition={{ duration: 0.6, delay: idx * 0.1 }}
               key={idx}
               className={clsx(
-                "cursor-pointer overflow-hidden bg-cream-warm",
-                idx % 3 === 0 ? "md:col-span-2 aspect-[16/9]" : "aspect-[3/4]"
+                "cursor-pointer overflow-hidden bg-cream-warm flex items-center justify-center",
+                idx % 3 === 0 && "md:col-span-2"
               )}
               onClick={() => openLightbox(idx + 1)}
             >
@@ -154,7 +156,7 @@ const ProjectDetails = () => {
                 src={img} 
                 alt={`${project.title} - ${idx + 1}`} 
                 loading="lazy"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                className="w-full h-auto hover:scale-105 transition-transform duration-700"
               />
             </motion.div>
           ))}

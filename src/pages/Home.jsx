@@ -37,7 +37,6 @@ const Home = () => {
             alt="Hero Background" 
             className="w-full h-full object-cover scale-105 transform transition-transform duration-[20s] ease-out hover:scale-100"
           />
-          <div className="absolute inset-0 bg-primary/20 mix-blend-multiply"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/20 to-transparent"></div>
         </div>
         
@@ -47,7 +46,6 @@ const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
             className="font-serif text-5xl md:text-7xl lg:text-8xl text-cream mb-6 tracking-widest font-bold leading-tight"
-            style={{ textShadow: "0 0 25px rgba(90, 31, 43, 0.7), 0 0 10px rgba(230, 210, 181, 0.3)" }}
           >
             THE MARVELOUS PHOTOGRAPHY
           </motion.h1>
@@ -153,12 +151,12 @@ const Home = () => {
               className={clsx("group relative overflow-hidden", index % 2 !== 0 && "md:mt-24")}
             >
               <Link to={`/portfolio/${project.id}`} className="block overflow-hidden relative">
-                <div className="aspect-[4/5] overflow-hidden bg-cream-warm">
+                <div className="w-full overflow-hidden bg-cream-warm flex items-center justify-center">
                   <img 
                     src={project.coverImage} 
                     alt={project.title} 
                     loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-auto transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
                 <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors duration-500"></div>
