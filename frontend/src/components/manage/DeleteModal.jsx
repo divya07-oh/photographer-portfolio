@@ -14,7 +14,7 @@ const DeleteModal = ({ isOpen, onClose, onConfirm, title }) => {
           <p className="text-dark/70 font-light mb-6">
             "Are you sure you want to delete {title ? `"${title}"` : 'this project'}? This action cannot be undone."
           </p>
-          <div className="flex gap-4 w-full">
+          <div className="flex flex-col-reverse sm:flex-row gap-4 w-full">
             <button 
               onClick={onClose}
               className="flex-1 py-3 px-4 border border-dark/20 text-dark hover:bg-dark/5 transition-colors uppercase tracking-widest text-xs font-sans rounded"

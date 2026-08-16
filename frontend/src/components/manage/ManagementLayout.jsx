@@ -12,7 +12,7 @@ const ManagementLayout = () => {
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-cream font-sans">
+    <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-cream font-sans">
       <Sidebar />
       <main className="flex-1 overflow-y-auto bg-cream p-4 md:p-8">
         <div className="max-w-6xl mx-auto">

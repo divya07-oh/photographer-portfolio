@@ -227,18 +227,18 @@ const ProjectForm = ({ initialData, isEdit = false }) => {
         </div>
       </div>
 
-      <div className="flex justify-end gap-4 pt-4 border-t border-dark/10">
+      <div className="flex flex-col-reverse md:flex-row justify-end gap-4 pt-4 border-t border-dark/10">
         <button 
           type="button" 
           onClick={() => navigate('/manage/projects')}
-          className="px-6 py-3 border border-dark/20 text-dark hover:bg-dark/5 transition-colors uppercase tracking-widest text-xs font-sans rounded"
+          className="w-full md:w-auto px-6 py-3 border border-dark/20 text-dark hover:bg-dark/5 transition-colors uppercase tracking-widest text-xs font-sans rounded text-center"
         >
           Cancel
         </button>
         <button 
           type="submit" 
           disabled={isSubmitting}
-          className="px-8 py-3 bg-primary text-cream hover:bg-dark transition-colors uppercase tracking-widest text-xs font-sans rounded disabled:opacity-50"
+          className="w-full md:w-auto px-8 py-3 bg-primary text-cream hover:bg-dark transition-colors uppercase tracking-widest text-xs font-sans rounded disabled:opacity-50 text-center"
         >
           {isSubmitting ? 'Saving...' : (isEdit ? 'Update Project' : 'Save Project')}
         </button>

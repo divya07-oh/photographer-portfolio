@@ -40,9 +40,9 @@ const Dashboard = () => {
         
         <div className="bg-white/50 border border-dark/10 rounded-lg shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-dark/10 bg-dark/5">
+            <table className="w-full text-left border-collapse block md:table">
+              <thead className="hidden md:table-header-group">
+                <tr className="border-b border-dark/10 bg-dark/5 flex flex-col md:table-row">
                   <th className="p-4 font-sans text-xs uppercase tracking-wider text-dark/50 font-normal">Project</th>
                   <th className="p-4 font-sans text-xs uppercase tracking-wider text-dark/50 font-normal">Category</th>
                   <th className="p-4 font-sans text-xs uppercase tracking-wider text-dark/50 font-normal">Year</th>
@@ -50,41 +50,50 @@ const Dashboard = () => {
                   <th className="p-4 font-sans text-xs uppercase tracking-wider text-dark/50 font-normal text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="block md:table-row-group">
                 {recentProjects.map(project => (
-                  <tr key={project.id} className="border-b border-dark/5 hover:bg-dark/5 transition-colors">
-                    <td className="p-4">
+                  <tr key={project.id} className="border-b border-dark/5 hover:bg-dark/5 transition-colors flex flex-col md:table-row">
+                    <td className="p-4 block md:table-cell">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-dark/10 rounded overflow-hidden flex-shrink-0">
+                        <div className="w-16 h-16 md:w-12 md:h-12 bg-dark/10 rounded overflow-hidden flex-shrink-0">
                           {project.coverImage ? (
                             <img src={project.coverImage} alt={project.title} className="w-full h-full object-contain" />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-dark/30 text-xs">No Img</div>
+                            <div className="w-full h-full flex items-center justify-center text-dark/30 text-xs text-center leading-tight p-1">No Img</div>
                           )}
                         </div>
-                        <span className="font-serif text-dark text-lg">{project.title}</span>
+                        <span className="font-serif text-dark text-xl md:text-lg">{project.title}</span>
                       </div>
                     </td>
-                    <td className="p-4 text-dark/70 font-light">{project.category}</td>
-                    <td className="p-4 text-dark/70 font-light">{project.year}</td>
-                    <td className="p-4 text-dark/70 font-light">
+                    <td className="p-2 px-4 md:p-4 text-dark/70 font-light block md:table-cell">
+                      <span className="md:hidden font-medium mr-2">Category:</span>
+                      {project.category}
+                    </td>
+                    <td className="p-2 px-4 md:p-4 text-dark/70 font-light block md:table-cell">
+                      <span className="md:hidden font-medium mr-2">Year:</span>
+                      {project.year}
+                    </td>
+                    <td className="p-2 px-4 md:p-4 text-dark/70 font-light block md:table-cell">
+                      <span className="md:hidden font-medium mr-2">Photos:</span>
                       {project.images ? project.images.length : 0}
                     </td>
-                    <td className="p-4 text-right">
-                      <div className="flex justify-end gap-3">
-                        <Link to={`/manage/projects/${project.id}/edit`} className="text-dark/50 hover:text-primary transition-colors p-1" title="Edit">
-                          <Edit size={18} />
+                    <td className="p-4 text-left md:text-right block md:table-cell border-t border-dark/5 md:border-0 mt-2 md:mt-0">
+                      <div className="flex justify-start md:justify-end gap-4 md:gap-3">
+                        <Link to={`/manage/projects/${project.id}/edit`} className="flex items-center gap-2 text-dark/70 hover:text-primary transition-colors py-2 px-4 md:p-1 bg-dark/5 md:bg-transparent rounded-full md:rounded-none" title="Edit">
+                          <Edit size={16} />
+                          <span className="md:hidden text-sm uppercase tracking-wider">Edit</span>
                         </Link>
-                        <Link to={`/portfolio/${project.id}`} target="_blank" className="text-dark/50 hover:text-primary transition-colors p-1" title="View Public">
-                          <Eye size={18} />
+                        <Link to={`/portfolio/${project.id}`} target="_blank" className="flex items-center gap-2 text-dark/70 hover:text-primary transition-colors py-2 px-4 md:p-1 bg-dark/5 md:bg-transparent rounded-full md:rounded-none" title="View Public">
+                          <Eye size={16} />
+                          <span className="md:hidden text-sm uppercase tracking-wider">View</span>
                         </Link>
                       </div>
                     </td>
                   </tr>
                 ))}
                 {recentProjects.length === 0 && (
-                  <tr>
-                    <td colSpan="5" className="p-8 text-center text-dark/50 font-light">
+                  <tr className="block md:table-row">
+                    <td colSpan="5" className="p-8 text-center text-dark/50 font-light block md:table-cell">
                       No projects found.
                     </td>
                   </tr>
