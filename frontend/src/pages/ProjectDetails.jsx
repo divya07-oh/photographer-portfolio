@@ -1,24 +1,40 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { getProjectById, PROJECTS } from '../data/portfolioService';
+import { ArrowLeft, ArrowRight, X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { fetchProjectById, fetchProjectsByCategory } from '../data/portfolioService';
 import clsx from 'clsx';
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
   const navigate = useNavigate();
   const [project, setProject] = useState(null);
+  const [allProjects, setAllProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
-    const data = getProjectById(projectId);
-    if (data) {
-      setProject(data);
-    } else {
-      navigate('/portfolio');
-    }
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchProjectById(projectId);
+        if (data) {
+          setProject(data);
+          const projectsList = await fetchProjectsByCategory('ALL');
+          setAllProjects(projectsList);
+        } else {
+          navigate('/portfolio');
+        }
+      } catch (err) {
+        console.error(err);
+        navigate('/portfolio');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadData();
   }, [projectId, navigate]);
 
   // Keyboard navigation for lightbox
@@ -32,6 +48,14 @@ const ProjectDetails = () => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [lightboxOpen, currentImageIndex]);
+
+  if (loading) {
+    return (
+      <div className="bg-cream min-h-screen pt-32 pb-24 flex items-center justify-center">
+        <Loader2 className="animate-spin text-dark/50 w-12 h-12" />
+      </div>
+    );
+  }
 
   if (!project) return null;
 
@@ -51,9 +75,9 @@ const ProjectDetails = () => {
   };
 
   // Find next/prev project for footer navigation
-  const currentIndex = PROJECTS.findIndex(p => p.id === projectId);
-  const prevProject = currentIndex > 0 ? PROJECTS[currentIndex - 1] : null;
-  const nextProject = currentIndex < PROJECTS.length - 1 ? PROJECTS[currentIndex + 1] : null;
+  const currentIndex = allProjects.findIndex(p => p.id === projectId);
+  const prevProject = currentIndex > 0 ? allProjects[currentIndex - 1] : null;
+  const nextProject = currentIndex >= 0 && currentIndex < allProjects.length - 1 ? allProjects[currentIndex + 1] : null;
 
   return (
     <div className="bg-cream min-h-screen pt-32 pb-24">
@@ -101,14 +125,16 @@ const ProjectDetails = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mb-16 cursor-pointer overflow-hidden aspect-[16/9] bg-cream-warm"
+          className="mb-16 cursor-pointer"
           onClick={() => openLightbox(0)}
         >
-          <img 
-            src={project.coverImage} 
-            alt={project.title} 
-            className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-          />
+          <div className="w-full overflow-hidden bg-cream-warm group flex items-center justify-center">
+            <img 
+              src={project.coverImage} 
+              alt={project.title} 
+              className="w-full h-auto hover:scale-105 transition-transform duration-700"
+            />
+          </div>
         </motion.div>
 
         {/* Editorial Gallery Layout */}
@@ -121,8 +147,8 @@ const ProjectDetails = () => {
               transition={{ duration: 0.6, delay: idx * 0.1 }}
               key={idx}
               className={clsx(
-                "cursor-pointer overflow-hidden bg-cream-warm",
-                idx % 3 === 0 ? "md:col-span-2 aspect-[16/9]" : "aspect-[3/4]"
+                "cursor-pointer overflow-hidden bg-cream-warm flex items-center justify-center",
+                idx % 3 === 0 && "md:col-span-2"
               )}
               onClick={() => openLightbox(idx + 1)}
             >
@@ -130,7 +156,7 @@ const ProjectDetails = () => {
                 src={img} 
                 alt={`${project.title} - ${idx + 1}`} 
                 loading="lazy"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                className="w-full h-auto hover:scale-105 transition-transform duration-700"
               />
             </motion.div>
           ))}
