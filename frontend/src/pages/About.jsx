@@ -47,15 +47,7 @@ const About = () => {
               </p>
             </div>
 
-            <div className="pt-8 border-t border-primary/20">
-              <h3 className="text-sm uppercase tracking-widest text-primary mb-4 font-semibold">Specializations</h3>
-              <ul className="grid grid-cols-2 gap-4 text-dark/70 font-light">
-                <li>Editorial Weddings</li>
-                <li>Fine Art Portraiture</li>
-                <li>Brand & Lifestyle</li>
-                <li>Analog Film Processing</li>
-              </ul>
-            </div>
+
 
             <div className="pt-8">
               <Link 

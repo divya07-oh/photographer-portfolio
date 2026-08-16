@@ -45,7 +45,7 @@ const Home = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="font-serif text-5xl md:text-7xl lg:text-8xl text-cream mb-6 tracking-widest font-bold leading-tight"
+            className="font-serif text-4xl md:text-6xl lg:text-7xl text-cream mb-6 tracking-widest font-bold leading-tight"
           >
             THE MARVELOUS PHOTOGRAPHY
           </motion.h1>

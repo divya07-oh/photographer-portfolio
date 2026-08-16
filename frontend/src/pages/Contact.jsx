@@ -69,7 +69,7 @@ const Contact = () => {
                 <div className="w-12 h-12 bg-primary/5 rounded-full flex items-center justify-center">
                   <MapPin size={20} className="text-primary" />
                 </div>
-                <span className="text-lg">Based in Paris, Available Worldwide</span>
+                <span className="text-lg">Thiruttani, Tamil Nadu</span>
               </div>
               <a href="https://www.instagram.com/the_marvelous_photography/" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-4 hover:text-primary transition-colors group">
                 <div className="w-12 h-12 bg-primary/5 rounded-full flex items-center justify-center group-hover:bg-primary/10 transition-colors">
