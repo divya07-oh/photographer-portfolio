@@ -45,7 +45,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <Link to="/" className="flex items-center">
-            <img src="/logo.png" alt="Murali Ragavan Logo" className="h-10 w-auto" />
+            <img src="/logo.png" alt="Murali Ragavan Logo" className="h-16 w-auto" />
           </Link>
 
           {/* Desktop Menu */}
