@@ -16,6 +16,7 @@ The public-facing side of the website is accessible to all visitors and includes
 - **Project Details:** Detailed view of a specific project, including a full image gallery and description.
 - **About:** Information about the photographer, Murali Ragavan.
 - **Services:** Detailed offerings such as Traditional, Candid Photography, and Album creation.
+- **Packages:** Public pricing page for different event categories, driven by a centralized configuration.
 - **Contact:** Contact form and information.
 
 ## Project Management
@@ -24,6 +25,7 @@ The admin management side is restricted to authenticated users:
 - **Projects List:** Table/Grid view to manage existing projects.
 - **Add Project:** Interface to create a new project and upload images.
 - **Edit Project:** Interface to modify project details, reorder images, and manage cover photos.
+- **Package Calculator:** Internal tool to generate customer quotes, apply discounts, generate formatted PDF documents, and share them directly with clients via WhatsApp.
 - **Admin Login:** Secure login portal to access the `/manage` routes.
 
 ## Supabase Authentication
@@ -70,6 +72,13 @@ Stores the gallery images associated with a project.
 - **Update:** Deletes removed images from storage and DB, uploads new cover/gallery images, updates project details, and updates the `display_order` of existing images.
 - **Delete:** Retrieves the project, deletes the project record (cascading deletes `project_images`), and removes the entire project folder from the `photography` bucket.
 
+### Package Quotation Flow
+1. Admin opens the Package Calculator (`/manage/calculator`) and inputs customer details.
+2. Selects the event type and desired services (pulled dynamically from the centralized `pricing.js`).
+3. System instantly calculates the total and allows for custom discounts, calculating the final price.
+4. Admin clicks "Generate PDF" which builds a customized, beautifully formatted PDF quotation using `jspdf` and `jspdf-autotable`.
+5. Admin clicks "Send PDF via WhatsApp", triggering a Web Share API flow (on mobile) or a seamless download+`wa.me` redirect (on desktop) to attach and send the quote to the client.
+
 ## Existing Routes
 **Public Routes:**
 - `/` - Home
@@ -77,6 +86,7 @@ Stores the gallery images associated with a project.
 - `/portfolio/:projectId` - Project Details
 - `/about` - About Page
 - `/services` - Services Page
+- `/packages` - Public Packages & Pricing
 - `/contact` - Contact Page
 - `/admin-login` - Authentication Portal
 
@@ -85,10 +95,12 @@ Stores the gallery images associated with a project.
 - `/manage/projects` - Project Management
 - `/manage/projects/new` - Create Project
 - `/manage/projects/:id/edit` - Edit Project
+- `/manage/calculator` - Internal Package Calculator
 
 ## Important Components & Services
 - `src/services/supabase.js`: Initializes and exports the Supabase client.
 - `src/services/projectService.js`: Contains all CRUD operations and storage logic.
+- `src/config/pricing.js`: Centralized pricing configuration utilized by both public pages and the internal calculator.
 - `src/components/Navbar.jsx` & `src/components/manage/Sidebar.jsx`: Main navigation components.
 - `src/components/manage/ProtectedRoute.jsx`: Authentication wrapper for management routes.
 
@@ -101,6 +113,7 @@ Stores the gallery images associated with a project.
 - **Backend/DB:** Supabase (supabase-js)
 - **Build Tool:** Vite
 - **Email Service:** EmailJS
+- **PDF Generation:** jsPDF, jsPDF-AutoTable
 
 ## Development Setup
 Ensure Node.js is installed.
