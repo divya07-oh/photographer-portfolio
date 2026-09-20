@@ -6,6 +6,7 @@ import Portfolio from './pages/Portfolio';
 import ProjectDetails from './pages/ProjectDetails';
 import About from './pages/About';
 import Services from './pages/Services';
+import Packages from './pages/Packages';
 import Contact from './pages/Contact';
 
 // Management
@@ -39,6 +40,7 @@ function App() {
           <Route path="portfolio/:projectId" element={<ProjectDetails />} />
           <Route path="about" element={<About />} />
           <Route path="services" element={<Services />} />
+          <Route path="packages" element={<Packages />} />
           <Route path="contact" element={<Contact />} />
         </Route>
         
