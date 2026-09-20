@@ -3,31 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import clsx from 'clsx';
+import { CUSTOMER_CATEGORIES } from '../config/pricing';
 
 const Packages = () => {
-  const [activeTab, setActiveTab] = useState('engagement');
-
-  const engagementPackages = [
-    { name: 'Traditional Photography', price: '10,000', desc: 'Classic and timeless photography.' },
-    { name: 'Traditional Video', price: '12,000', desc: 'Comprehensive video coverage.' },
-    { name: 'Candid Photography', price: '18,000', desc: 'Capturing natural, unposed moments.' },
-    { name: 'Candid Video', price: '20,000', desc: 'Cinematic storytelling of your day.' },
-  ];
-
-  const engagementAddons = [
-    { name: 'Album', price: '22,000' },
-    { name: 'Photo Booth', price: '18,000' },
-    { name: '360° Photography', price: '8,000' },
-    { name: 'Drone Coverage', price: '15,000' },
-  ];
-
-  const eventPackages = [
-    { name: 'Traditional Photography', price: '8,000', desc: 'Classic event coverage.' },
-    { name: 'Traditional Video', price: '10,000', desc: 'Professional event videography.' },
-    { name: 'Candid Photography', price: '14,000', desc: 'Authentic candid moments.' },
-    { name: 'Candid Video', price: '16,000', desc: 'Highlight reels and cinematic cuts.' },
-    { name: 'Album', price: '15,000', desc: 'Premium printed photo album.' },
-  ];
+  const [activeTab, setActiveTab] = useState('wedding-engagement');
 
   const renderPackageCard = (pkg, index) => (
     <motion.div
@@ -42,7 +21,9 @@ const Packages = () => {
         {pkg.desc && <p className="text-dark/60 font-light text-sm">{pkg.desc}</p>}
       </div>
       <div className="mt-auto">
-        <p className="font-serif text-3xl text-primary mb-6">₹{pkg.price}</p>
+        <p className="font-serif text-3xl text-primary mb-6">
+          {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(pkg.price)}
+        </p>
         <Link to="/contact" className="inline-flex items-center space-x-2 text-xs uppercase tracking-widest text-dark group-hover:text-primary transition-colors">
           <span>Enquire Now</span>
           <ArrowRight size={14} className="transform group-hover:translate-x-1 transition-transform" />
@@ -74,106 +55,56 @@ const Packages = () => {
         </div>
 
         {/* 2. Category Navigation */}
-        <div className="flex justify-center mb-16">
-          <div className="inline-flex space-x-8 border-b border-dark/10 px-4">
-            <button
-              onClick={() => setActiveTab('engagement')}
-              className={clsx(
-                "pb-4 text-sm uppercase tracking-widest transition-colors relative",
-                activeTab === 'engagement' ? "text-primary" : "text-dark/50 hover:text-dark"
-              )}
-            >
-              Engagement
-              {activeTab === 'engagement' && (
-                <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 w-full h-[1px] bg-primary" />
-              )}
-            </button>
-            <button
-              onClick={() => setActiveTab('event')}
-              className={clsx(
-                "pb-4 text-sm uppercase tracking-widest transition-colors relative",
-                activeTab === 'event' ? "text-primary" : "text-dark/50 hover:text-dark"
-              )}
-            >
-              Event
-              {activeTab === 'event' && (
-                <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 w-full h-[1px] bg-primary" />
-              )}
-            </button>
+        <div className="flex justify-center mb-16 overflow-x-auto pb-4 hide-scrollbar">
+          <div className="inline-flex space-x-8 border-b border-dark/10 px-4 flex-nowrap md:flex-wrap justify-start md:justify-center whitespace-nowrap min-w-max md:min-w-0">
+            {Object.entries(CUSTOMER_CATEGORIES).map(([key, category]) => (
+              <button
+                key={key}
+                onClick={() => setActiveTab(key)}
+                className={clsx(
+                  "pb-4 text-sm uppercase tracking-widest transition-colors relative px-2 md:px-0",
+                  activeTab === key ? "text-primary" : "text-dark/50 hover:text-dark"
+                )}
+              >
+                {category.title}
+                {activeTab === key && (
+                  <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 w-full h-[1px] bg-primary" />
+                )}
+              </button>
+            ))}
           </div>
         </div>
 
         {/* 3 & 4. Package Sections */}
         <div className="min-h-[500px]">
           <AnimatePresence mode="wait">
-            {activeTab === 'engagement' && (
-              <motion.div
-                key="engagement"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.4 }}
-              >
-                <div className="text-center mb-12">
-                  <h2 className="font-serif text-4xl text-dark mb-4">Engagement Photography</h2>
-                  <p className="text-dark/60 font-light max-w-xl mx-auto">
-                    Capture every special moment with photography and cinematic coverage tailored to your celebration.
-                  </p>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-                  {engagementPackages.map(renderPackageCard)}
-                </div>
-
-                {/* 5. Add-ons */}
-                <div className="border-t border-dark/10 pt-16">
-                  <h3 className="font-serif text-3xl text-dark mb-8 text-center">Additional Services</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {engagementAddons.map((addon, idx) => (
-                      <motion.div 
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: idx * 0.1 }}
-                        key={addon.name}
-                        className="bg-cream-warm/50 p-6 flex justify-between items-center border border-transparent hover:border-dark/10 transition-colors"
-                      >
-                        <span className="font-serif text-lg text-dark">{addon.name}</span>
-                        <span className="text-primary font-serif">₹{addon.price}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {activeTab === 'event' && (
-              <motion.div
-                key="event"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.4 }}
-              >
-                <div className="text-center mb-12">
-                  <h2 className="font-serif text-4xl text-dark mb-4">Event Photography</h2>
-                  <p className="text-dark/60 font-light max-w-xl mx-auto mb-6">
-                    Professional photography and video coverage for birthdays, engagements and special events.
-                  </p>
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+            >
+              <div className="text-center mb-12 px-4">
+                <h2 className="font-serif text-4xl text-dark mb-4">{CUSTOMER_CATEGORIES[activeTab].heading}</h2>
+                <p className="text-dark/60 font-light max-w-xl mx-auto mb-6">
+                  {CUSTOMER_CATEGORIES[activeTab].description}
+                </p>
+                {CUSTOMER_CATEGORIES[activeTab].subLabels && (
                   <div className="flex flex-wrap justify-center gap-3">
-                    {['Birthday', 'Engagement', 'Puberty Ceremony'].map(type => (
+                    {CUSTOMER_CATEGORIES[activeTab].subLabels.map(type => (
                       <span key={type} className="px-4 py-1 text-xs uppercase tracking-widest text-primary border border-primary/20 rounded-full">
                         {type}
                       </span>
                     ))}
                   </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {eventPackages.map(renderPackageCard)}
-                </div>
-              </motion.div>
-            )}
+                )}
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                {CUSTOMER_CATEGORIES[activeTab].services.map((pkg, index) => renderPackageCard(pkg, index))}
+              </div>
+            </motion.div>
           </AnimatePresence>
         </div>
 

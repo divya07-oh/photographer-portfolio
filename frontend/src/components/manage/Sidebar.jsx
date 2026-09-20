@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Image as ImageIcon, PlusCircle, Globe, Menu, X, LogOut } from 'lucide-react';
+import { LayoutDashboard, Image as ImageIcon, PlusCircle, Globe, Menu, X, LogOut, Calculator } from 'lucide-react';
 import { useState } from 'react';
 import { supabase } from '../../services/supabase';
 
@@ -13,6 +13,7 @@ const Sidebar = () => {
     { name: 'Dashboard', path: '/manage', icon: LayoutDashboard, exact: true },
     { name: 'Projects', path: '/manage/projects', icon: ImageIcon, exact: true },
     { name: 'Add Project', path: '/manage/projects/new', icon: PlusCircle, exact: false },
+    { name: 'Calculator', path: '/manage/calculator', icon: Calculator, exact: false },
   ];
 
   const navigate = useNavigate();

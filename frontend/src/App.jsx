@@ -16,6 +16,7 @@ import Dashboard from './pages/manage/Dashboard';
 import Projects from './pages/manage/Projects';
 import AddProject from './pages/manage/AddProject';
 import EditProject from './pages/manage/EditProject';
+import PackageCalculator from './pages/manage/PackageCalculator';
 import AdminLogin from './pages/AdminLogin';
 
 // Scroll to top on route change
@@ -54,6 +55,7 @@ function App() {
           <Route path="projects" element={<Projects />} />
           <Route path="projects/new" element={<AddProject />} />
           <Route path="projects/:id/edit" element={<EditProject />} />
+          <Route path="calculator" element={<PackageCalculator />} />
         </Route>
 
         {/* Admin Login */}
