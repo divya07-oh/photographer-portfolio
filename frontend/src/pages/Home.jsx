@@ -140,7 +140,6 @@ const Home = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-              <pre className="col-span-full overflow-auto bg-black text-green-400 p-4 text-xs">{JSON.stringify(featuredProjects, null, 2)}</pre>
               {featuredProjects.map((project, index) => (
             <motion.div 
               initial={{ opacity: 0, y: 50 }}
