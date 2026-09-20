@@ -138,7 +138,7 @@ const ProjectDetails = () => {
         </motion.div>
 
         {/* Editorial Gallery Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">
+        <div className="columns-1 md:columns-2 gap-8 mb-24 space-y-8">
           {project.gallery.map((img, idx) => (
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -146,10 +146,7 @@ const ProjectDetails = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
               key={idx}
-              className={clsx(
-                "cursor-pointer overflow-hidden bg-cream-warm flex items-center justify-center",
-                idx % 3 === 0 && "md:col-span-2"
-              )}
+              className="cursor-pointer overflow-hidden bg-cream-warm relative group break-inside-avoid"
               onClick={() => openLightbox(idx + 1)}
             >
               <img 

@@ -30,9 +30,9 @@ const ProjectCard = ({ project, onDeleteClick }) => {
       </td>
       <td className="p-4 text-left md:text-right block md:table-cell border-t border-dark/5 md:border-0 mt-2 md:mt-0">
         <div className="flex justify-start md:justify-end gap-4 md:gap-3">
-          <Link to={`/manage/projects/${project.id}/edit`} className="flex items-center gap-2 text-dark/70 hover:text-primary transition-colors py-2 px-4 md:p-1 bg-dark/5 md:bg-transparent rounded-full md:rounded-none" title="Edit">
+          <Link to={`/manage/projects/${project.id}/edit`} className="flex items-center gap-2 text-dark/70 hover:text-primary transition-colors py-2 px-4 md:p-2 bg-dark/5 md:bg-transparent rounded md:border md:border-dark/20" title="Update">
             <Edit size={16} />
-            <span className="md:hidden text-sm uppercase tracking-wider">Edit</span>
+            <span className="text-sm uppercase tracking-wider">Update</span>
           </Link>
           <button 
             onClick={() => onDeleteClick(project)} 
@@ -40,7 +40,7 @@ const ProjectCard = ({ project, onDeleteClick }) => {
             title="Delete"
           >
             <Trash2 size={16} />
-            <span className="md:hidden text-sm uppercase tracking-wider">Delete</span>
+            <span className="text-sm uppercase tracking-wider">Delete</span>
           </button>
         </div>
       </td>

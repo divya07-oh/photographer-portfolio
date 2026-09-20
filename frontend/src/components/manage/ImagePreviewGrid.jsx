@@ -42,7 +42,7 @@ const ImagePreviewGrid = ({ images, onRemove, onReorder, isCover = false }) => {
           <img 
             src={img.url || img} 
             alt="Preview" 
-            className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-48 object-contain bg-black/5 transition-transform duration-300 group-hover:scale-105"
           />
           
           <div className="absolute inset-0 bg-dark/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-between p-2">

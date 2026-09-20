@@ -74,8 +74,6 @@ const Sidebar = () => {
         <div className="p-4 mt-auto border-t border-cream/10 space-y-2">
           <a 
             href="/" 
-            target="_blank" 
-            rel="noopener noreferrer"
             className="flex items-center gap-4 px-4 py-3 rounded-md text-cream/70 hover:bg-cream/10 hover:text-cream transition-colors duration-200"
           >
             <Globe size={20} />
