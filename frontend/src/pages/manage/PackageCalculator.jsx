@@ -15,6 +15,22 @@ const PackageCalculator = () => {
   
   const [isPdfGenerated, setIsPdfGenerated] = useState(false);
   const [pdfData, setPdfData] = useState(null);
+  const [logoBase64, setLogoBase64] = useState(null);
+
+  useEffect(() => {
+    // Pre-load logo for PDF
+    const img = new Image();
+    img.src = '/logo.png';
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      setLogoBase64(canvas.toDataURL('image/png'));
+    };
+  }, []);
 
   useEffect(() => {
     setIsPdfGenerated(false);
@@ -83,29 +99,66 @@ const PackageCalculator = () => {
 
     const doc = new jsPDF();
     const primaryColor = [35, 33, 31];
+    const pageWidth = doc.internal.pageSize.width;
     
-    // Title
-    doc.setFontSize(22);
+    let currentY = 20;
+
+    // Logo
+    if (logoBase64) {
+      doc.addImage(logoBase64, 'PNG', (pageWidth / 2) - 15, currentY, 30, 30);
+      currentY += 35;
+    }
+    
+    // Brand Name
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(24);
     doc.setTextColor(...primaryColor);
-    doc.text("PHOTOGRAPHY PACKAGE", 14, 22);
+    doc.text("The Marvelous Photography", pageWidth / 2, currentY, { align: "center" });
+    currentY += 8;
     
+    // Document Title
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.setTextColor(100, 100, 100);
+    doc.text("PHOTOGRAPHY PACKAGE QUOTATION", pageWidth / 2, currentY, { align: "center" });
+    currentY += 15;
+
+    // Separator line
+    doc.setDrawColor(230, 230, 230);
+    doc.line(14, currentY, pageWidth - 14, currentY);
+    currentY += 10;
+
     // Customer Info
     doc.setFontSize(11);
-    doc.setTextColor(80, 80, 80);
-    doc.text(`Customer Name: ${customerName.trim()}`, 14, 35);
-    doc.text(`Customer Phone: ${customerPhone.trim()}`, 14, 42);
-    doc.text(`Event Type: ${eventType}`, 14, 49);
+    doc.setTextColor(...primaryColor);
+    doc.setFont("helvetica", "bold");
+    doc.text("Customer Details:", 14, currentY);
+    currentY += 6;
     
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(80, 80, 80);
+    doc.text(`Name: ${customerName.trim()}`, 14, currentY);
+    currentY += 6;
+    doc.text(`Phone: ${customerPhone.trim()}`, 14, currentY);
+    currentY += 6;
+    doc.text(`Event: ${eventType}`, 14, currentY);
+    currentY += 10;
+
+    const pdfCurrency = (amount) => formatCurrency(amount).replace('₹', 'Rs. ');
+
     // Table data
     const tableBody = selectedServices.map(serviceName => {
       const service = currentServices.find(s => s.name === serviceName);
-      return [serviceName, service ? formatCurrency(service.price) : '---'];
+      return [serviceName, service ? pdfCurrency(service.price) : '---'];
     });
 
     // Add table
     autoTable(doc, {
-      startY: 60,
-      head: [['Service', 'Price']],
+      startY: currentY,
+      head: [[
+        { content: 'Selected Services', styles: { halign: 'left' } },
+        { content: 'Price', styles: { halign: 'right' } }
+      ]],
       body: tableBody,
       theme: 'plain',
       headStyles: {
@@ -114,66 +167,86 @@ const PackageCalculator = () => {
         fontStyle: 'bold',
       },
       styles: {
-        cellPadding: 5,
+        cellPadding: 6,
         fontSize: 11,
       },
       columnStyles: {
-        1: { halign: 'right' }
-      }
+        0: { cellWidth: 'auto' },
+        1: { halign: 'right', cellWidth: 50 }
+      },
+      margin: { left: 14, right: 14 }
     });
 
-    const finalY = doc.lastAutoTable.finalY || 60;
+    currentY = doc.lastAutoTable.finalY + 5;
     
-    // Totals
+    // Totals Table
     autoTable(doc, {
-      startY: finalY + 10,
+      startY: currentY,
       body: [
-        ['CALCULATED TOTAL', formatCurrency(calculatedTotal)],
-        ['DISCOUNT', formatCurrency(actualDiscount)]
+        ['Calculated Total', pdfCurrency(calculatedTotal)],
+        ['Discount Applied', pdfCurrency(actualDiscount)]
       ],
       theme: 'plain',
-      styles: { cellPadding: 5, fontSize: 11 },
+      styles: { 
+        cellPadding: 4, 
+        fontSize: 11,
+        textColor: [80, 80, 80]
+      },
       columnStyles: {
-        0: { fontStyle: 'bold' },
-        1: { halign: 'right' }
-      }
+        0: { halign: 'left', fontStyle: 'normal' },
+        1: { halign: 'right', fontStyle: 'normal', cellWidth: 50 }
+      },
+      margin: { left: 14, right: 14 }
     });
 
-    const totalsY = doc.lastAutoTable.finalY;
+    currentY = doc.lastAutoTable.finalY;
 
-    // Final Price
+    // Final Price Table
     autoTable(doc, {
-      startY: totalsY + 5,
+      startY: currentY + 2,
       body: [
-        ['FINAL PACKAGE PRICE', formatCurrency(finalPackagePrice)]
+        ['FINAL PACKAGE PRICE', pdfCurrency(finalPackagePrice)]
       ],
       theme: 'plain',
-      styles: { cellPadding: 5, fontSize: 13, textColor: primaryColor },
+      styles: { 
+        cellPadding: 6, 
+        fontSize: 13, 
+        textColor: primaryColor,
+        fillColor: [246, 240, 228]
+      },
       columnStyles: {
-        0: { fontStyle: 'bold' },
-        1: { halign: 'right', fontStyle: 'bold' }
-      }
+        0: { halign: 'left', fontStyle: 'bold' },
+        1: { halign: 'right', fontStyle: 'bold', cellWidth: 50 }
+      },
+      margin: { left: 14, right: 14 }
     });
     
-    let currentY = doc.lastAutoTable.finalY + 15;
+    currentY = doc.lastAutoTable.finalY + 15;
 
     // Notes
     if (notes.trim()) {
       doc.setFontSize(11);
       doc.setFont("helvetica", "bold");
-      doc.text("Notes:", 14, currentY);
+      doc.setTextColor(...primaryColor);
+      doc.text("Additional Notes:", 14, currentY);
       
       doc.setFont("helvetica", "normal");
-      const splitNotes = doc.splitTextToSize(notes.trim(), 180);
+      doc.setTextColor(80, 80, 80);
+      const splitNotes = doc.splitTextToSize(notes.trim(), pageWidth - 28);
       doc.text(splitNotes, 14, currentY + 7);
-      currentY += 7 + (splitNotes.length * 5) + 5;
+      currentY += 7 + (splitNotes.length * 6) + 5;
     }
 
     // Footer
+    currentY += 10;
+    doc.setDrawColor(230, 230, 230);
+    doc.line(14, currentY, pageWidth - 14, currentY);
+    currentY += 10;
+
     doc.setFontSize(10);
     doc.setFont("helvetica", "italic");
-    doc.setTextColor(100, 100, 100);
-    doc.text("Thank you for choosing us for your special moments.", 14, currentY + 10);
+    doc.setTextColor(150, 150, 150);
+    doc.text("Thank you for choosing The Marvelous Photography for your special moments.", pageWidth / 2, currentY, { align: "center" });
     
     // Save to state instead of downloading immediately
     const sanitizedName = customerName.trim().replace(/[^a-zA-Z0-9]/g, '_') || 'Customer';
@@ -194,39 +267,18 @@ const PackageCalculator = () => {
     URL.revokeObjectURL(url);
   };
 
-  const handleWhatsAppShare = async () => {
+  const handleWhatsAppShare = () => {
     if (!pdfData) return;
 
-    const file = new File([pdfData.blob], pdfData.fileName, { type: "application/pdf" });
-
-    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({
-          title: "Photography Package",
-          text: "Here is your photography package quotation.",
-          files: [file]
-        });
-      } catch (error) {
-        if (error.name !== 'AbortError') {
-          console.error("Error sharing:", error);
-          fallbackShare();
-        }
-      }
-    } else {
-      fallbackShare();
-    }
-  };
-
-  const fallbackShare = () => {
+    // 1. Download the PDF so the photographer has it ready to attach
     handleDownloadPDF();
     
-    setTimeout(() => {
-      alert("PDF downloaded. Please attach the PDF in WhatsApp and send it to the customer.");
-      const normalizedPhone = normalizePhoneNumber(customerPhone);
-      const message = `Hello ${customerName.trim()},\n\nPlease find your photography package quotation attached as a PDF.\n\nThank you for choosing us for your special moments.\nPlease let us know if you have any questions.`;
-      const whatsappUrl = `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
-    }, 500);
+    // 2. Open WhatsApp directly to the specific customer chat
+    const normalizedPhone = normalizePhoneNumber(customerPhone);
+    const message = `Hello ${customerName.trim()},\n\nPlease find your photography package quotation attached as a PDF.\n\nThank you for choosing us for your special moments.\nPlease let us know if you have any questions.`;
+    const whatsappUrl = `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(message)}`;
+    
+    window.open(whatsappUrl, '_blank');
   };
 
   const handleClear = () => {
