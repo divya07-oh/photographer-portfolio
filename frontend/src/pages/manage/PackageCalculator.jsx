@@ -12,6 +12,8 @@ const PackageCalculator = () => {
   const [selectedServices, setSelectedServices] = useState([]);
   const [discount, setDiscount] = useState('');
   const [notes, setNotes] = useState('');
+  const [eventDate, setEventDate] = useState('');
+  const [optionalDate, setOptionalDate] = useState('');
   
   const [isPdfGenerated, setIsPdfGenerated] = useState(false);
   const [pdfData, setPdfData] = useState(null);
@@ -51,7 +53,7 @@ const PackageCalculator = () => {
   useEffect(() => {
     setIsPdfGenerated(false);
     setPdfData(null);
-  }, [customerName, customerPhone, eventType, selectedServices, discount, notes]);
+  }, [customerName, customerPhone, eventType, eventDate, optionalDate, selectedServices, discount, notes]);
 
   const currentServices = PRICING[eventType] || [];
 
@@ -94,6 +96,13 @@ const PackageCalculator = () => {
     return cleaned;
   };
 
+  const getDisplayName = (serviceName, currentEventType) => {
+    if (currentEventType === 'Wedding' && serviceName.toLowerCase().includes('album')) {
+      return `${serviceName} (Reception & Wedding)`;
+    }
+    return serviceName;
+  };
+
   const validateForm = () => {
     if (!customerName.trim()) {
       alert("Please enter the customer's name.");
@@ -101,6 +110,10 @@ const PackageCalculator = () => {
     }
     if (!customerPhone.trim()) {
       alert("Please enter the customer's WhatsApp number.");
+      return false;
+    }
+    if (!eventDate) {
+      alert("Please select the event date.");
       return false;
     }
     if (selectedServices.length === 0) {
@@ -124,13 +137,7 @@ const PackageCalculator = () => {
     const pageWidth = doc.internal.pageSize.width;
     const pageHeight = doc.internal.pageSize.height;
     
-    // Elegant border
-    doc.setDrawColor(...cream);
-    doc.setLineWidth(1);
-    doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
-    doc.setDrawColor(...primaryBurgundy);
-    doc.setLineWidth(0.5);
-    doc.rect(12, 12, pageWidth - 24, pageHeight - 24);
+
 
     let currentY = 25;
 
@@ -181,7 +188,12 @@ const PackageCalculator = () => {
     doc.setFont("times", "bold");
     doc.text("Date:", pageWidth / 2 + 10, currentY + 20);
     doc.setFont("helvetica", "normal");
-    doc.text(new Date().toLocaleDateString('en-IN'), pageWidth / 2 + 10, currentY + 26);
+    const displayDate = eventDate ? new Date(eventDate).toLocaleDateString('en-IN') : new Date().toLocaleDateString('en-IN');
+    let dateStr = displayDate;
+    if (optionalDate) {
+      dateStr += ` & ${new Date(optionalDate).toLocaleDateString('en-IN')}`;
+    }
+    doc.text(dateStr, pageWidth / 2 + 10, currentY + 26);
     
     currentY += 45;
 
@@ -190,7 +202,9 @@ const PackageCalculator = () => {
     // Table data
     const tableBody = selectedServices.map(serviceName => {
       const service = currentServices.find(s => s.name === serviceName);
-      return [serviceName, service ? pdfCurrency(service.price) : '---'];
+      const priceStr = service ? pdfCurrency(service.price) : '---';
+      const displayName = getDisplayName(serviceName, eventType);
+      return [displayName, priceStr];
     });
 
     // Add table
@@ -340,6 +354,8 @@ const PackageCalculator = () => {
     setCustomerName('');
     setCustomerPhone('');
     setEventType('Wedding');
+    setEventDate('');
+    setOptionalDate('');
     setSelectedServices([]);
     setDiscount('');
     setNotes('');
@@ -394,23 +410,46 @@ const PackageCalculator = () => {
             </div>
           </div>
 
-          {/* Section 2: Event Type */}
+          {/* Section 2: Event Details */}
           <div className="bg-white/50 border border-dark/10 p-6 rounded-lg shadow-sm">
-            <h3 className="font-sans font-medium text-sm tracking-widest text-dark uppercase mb-4">Event Type</h3>
-            <div className="relative">
-              <select 
-                value={eventType}
-                onChange={handleEventTypeChange}
-                className="w-full bg-white border border-dark/20 p-3 rounded text-dark focus:outline-none focus:border-primary transition-colors appearance-none"
-              >
-                {Object.keys(PRICING).map(type => (
-                  <option key={type} value={type}>{type}</option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-dark/50">
-                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                </svg>
+            <h3 className="font-sans font-medium text-sm tracking-widest text-dark uppercase mb-4">Event Details</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-dark/70 mb-2">Event Type</label>
+                <div className="relative">
+                  <select 
+                    value={eventType}
+                    onChange={handleEventTypeChange}
+                    className="w-full bg-white border border-dark/20 p-3 rounded text-dark focus:outline-none focus:border-primary transition-colors appearance-none"
+                  >
+                    {Object.keys(PRICING).map(type => (
+                      <option key={type} value={type}>{type}</option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-dark/50">
+                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-dark/70 mb-2">Event Date</label>
+                <input 
+                  type="date" 
+                  value={eventDate}
+                  onChange={(e) => setEventDate(e.target.value)}
+                  className="w-full bg-white border border-dark/20 p-3 rounded text-dark focus:outline-none focus:border-primary transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-dark/70 mb-2">Optional Date</label>
+                <input 
+                  type="date" 
+                  value={optionalDate}
+                  onChange={(e) => setOptionalDate(e.target.value)}
+                  className="w-full bg-white border border-dark/20 p-3 rounded text-dark focus:outline-none focus:border-primary transition-colors"
+                />
               </div>
             </div>
           </div>
@@ -438,7 +477,7 @@ const PackageCalculator = () => {
                       )}>
                         {isSelected && <span className="text-xs font-bold">✓</span>}
                       </div>
-                      <span className="font-medium text-sm">{service.name}</span>
+                      <span className="font-medium text-sm">{getDisplayName(service.name, eventType)}</span>
                     </div>
                     <span className={clsx("font-serif text-lg", isSelected ? "text-cream" : "text-primary")}>
                       {formatCurrency(service.price)}
@@ -487,7 +526,9 @@ const PackageCalculator = () => {
                     const service = currentServices.find(s => s.name === serviceName);
                     return (
                       <li key={serviceName} className="flex justify-between items-start text-sm">
-                        <span className="font-light max-w-[180px]">{serviceName}</span>
+                        <span className="font-light max-w-[180px]">
+                          {getDisplayName(serviceName, eventType)}
+                        </span>
                         <span className="font-serif">{service ? formatCurrency(service.price) : '---'}</span>
                       </li>
                     );

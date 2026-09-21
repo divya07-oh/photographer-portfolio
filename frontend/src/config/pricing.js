@@ -5,9 +5,12 @@ const WEDDING_ENGAGEMENT_SERVICES = [
   { name: 'Candid Video', price: 20000, desc: 'Cinematic storytelling of your day.' },
   { name: 'Album', price: 22000, desc: 'Premium photobook of your memories.' },
   { name: 'Photo Booth', price: 18000, desc: 'Interactive fun for your guests.' },
-  { name: '360° Coverage', price: 8000, desc: 'Immersive 360-degree videos.' },
+  { name: '360 degree photo booth', price: 8000, desc: 'Immersive 360-degree videos.' },
   { name: 'Drone Coverage', price: 15000, desc: 'Breathtaking aerial shots.' },
   { name: 'LED Wall (6×8)', price: 20000, desc: 'Dynamic visual display for your venue.' },
+  { name: 'Canvera album 25 sheet', price: 25000, desc: 'Premium Canvera album (25 sheets).' },
+  { name: 'Mini album 30 sheet', price: 3500, desc: 'Compact mini album (30 sheets).' },
+  { name: 'Livestreaming (4hrs)', price: 12000, desc: 'Professional livestreaming service for 4 hours.' },
 ];
 
 const PRE_POST_WEDDING_SERVICES = [
