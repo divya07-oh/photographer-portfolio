@@ -24,10 +24,26 @@ const PackageCalculator = () => {
     img.crossOrigin = 'Anonymous';
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
+      // Use the smaller dimension to make a perfect square for a circular crop
+      const size = Math.min(img.width, img.height);
+      canvas.width = size;
+      canvas.height = size;
       const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0);
+      
+      // Create a circular clipping path
+      ctx.beginPath();
+      ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.clip();
+      
+      // Draw the image centered and covering the circle
+      const scale = Math.max(size / img.width, size / img.height);
+      const scaledWidth = img.width * scale;
+      const scaledHeight = img.height * scale;
+      const x = (size - scaledWidth) / 2;
+      const y = (size - scaledHeight) / 2;
+      
+      ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
       setLogoBase64(canvas.toDataURL('image/png'));
     };
   }, []);
