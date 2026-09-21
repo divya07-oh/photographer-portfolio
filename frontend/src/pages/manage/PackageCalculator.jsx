@@ -114,10 +114,25 @@ const PackageCalculator = () => {
     if (!validateForm()) return;
 
     const doc = new jsPDF();
-    const primaryColor = [35, 33, 31];
-    const pageWidth = doc.internal.pageSize.width;
     
-    let currentY = 20;
+    // Theme Colors
+    const primaryBurgundy = [90, 31, 43];
+    const cream = [230, 210, 181];
+    const creamLight = [240, 226, 204];
+    const darkText = [36, 24, 26];
+    
+    const pageWidth = doc.internal.pageSize.width;
+    const pageHeight = doc.internal.pageSize.height;
+    
+    // Elegant border
+    doc.setDrawColor(...cream);
+    doc.setLineWidth(1);
+    doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
+    doc.setDrawColor(...primaryBurgundy);
+    doc.setLineWidth(0.5);
+    doc.rect(12, 12, pageWidth - 24, pageHeight - 24);
+
+    let currentY = 25;
 
     // Logo
     if (logoBase64) {
@@ -126,39 +141,49 @@ const PackageCalculator = () => {
     }
     
     // Brand Name
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(24);
-    doc.setTextColor(...primaryColor);
+    doc.setFont("times", "bold");
+    doc.setFontSize(28);
+    doc.setTextColor(...primaryBurgundy);
     doc.text("The Marvelous Photography", pageWidth / 2, currentY, { align: "center" });
     currentY += 8;
     
     // Document Title
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(12);
-    doc.setTextColor(100, 100, 100);
+    doc.setFont("times", "italic");
+    doc.setFontSize(14);
+    doc.setTextColor(...darkText);
     doc.text("PHOTOGRAPHY PACKAGE QUOTATION", pageWidth / 2, currentY, { align: "center" });
     currentY += 15;
 
     // Separator line
-    doc.setDrawColor(230, 230, 230);
-    doc.line(14, currentY, pageWidth - 14, currentY);
+    doc.setDrawColor(...cream);
+    doc.setLineWidth(0.5);
+    doc.line(20, currentY, pageWidth - 20, currentY);
     currentY += 10;
 
-    // Customer Info
+    // Customer Info Box
+    doc.setFillColor(...creamLight);
+    doc.rect(20, currentY, pageWidth - 40, 32, 'F');
+    
     doc.setFontSize(11);
-    doc.setTextColor(...primaryColor);
-    doc.setFont("helvetica", "bold");
-    doc.text("Customer Details:", 14, currentY);
-    currentY += 6;
+    doc.setTextColor(...darkText);
+    doc.setFont("times", "bold");
+    doc.text("Prepared For:", 25, currentY + 8);
     
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(80, 80, 80);
-    doc.text(`Name: ${customerName.trim()}`, 14, currentY);
-    currentY += 6;
-    doc.text(`Phone: ${customerPhone.trim()}`, 14, currentY);
-    currentY += 6;
-    doc.text(`Event: ${eventType}`, 14, currentY);
-    currentY += 10;
+    doc.text(customerName.trim(), 25, currentY + 14);
+    doc.text(customerPhone.trim(), 25, currentY + 20);
+    
+    doc.setFont("times", "bold");
+    doc.text("Event Type:", pageWidth / 2 + 10, currentY + 8);
+    doc.setFont("helvetica", "normal");
+    doc.text(eventType, pageWidth / 2 + 10, currentY + 14);
+    
+    doc.setFont("times", "bold");
+    doc.text("Date:", pageWidth / 2 + 10, currentY + 20);
+    doc.setFont("helvetica", "normal");
+    doc.text(new Date().toLocaleDateString('en-IN'), pageWidth / 2 + 10, currentY + 26);
+    
+    currentY += 45;
 
     const pdfCurrency = (amount) => formatCurrency(amount).replace('₹', 'Rs. ');
 
@@ -172,25 +197,30 @@ const PackageCalculator = () => {
     autoTable(doc, {
       startY: currentY,
       head: [[
-        { content: 'Selected Services', styles: { halign: 'left' } },
-        { content: 'Price', styles: { halign: 'right' } }
+        { content: 'SELECTED SERVICES', styles: { halign: 'left' } },
+        { content: 'PRICE', styles: { halign: 'right' } }
       ]],
       body: tableBody,
       theme: 'plain',
       headStyles: {
-        fillColor: [246, 240, 228],
-        textColor: primaryColor,
+        fillColor: primaryBurgundy,
+        textColor: [255, 255, 255],
         fontStyle: 'bold',
+        font: 'times'
       },
       styles: {
-        cellPadding: 6,
+        cellPadding: 8,
         fontSize: 11,
+        font: 'helvetica',
+        textColor: darkText,
+        lineColor: cream,
+        lineWidth: { bottom: 0.5 }
       },
       columnStyles: {
         0: { cellWidth: 'auto' },
-        1: { halign: 'right', cellWidth: 50 }
+        1: { halign: 'right', cellWidth: 50, fontStyle: 'bold' }
       },
-      margin: { left: 14, right: 14 }
+      margin: { left: 20, right: 20 }
     });
 
     currentY = doc.lastAutoTable.finalY + 5;
@@ -200,19 +230,20 @@ const PackageCalculator = () => {
       startY: currentY,
       body: [
         ['Calculated Total', pdfCurrency(calculatedTotal)],
-        ['Discount Applied', pdfCurrency(actualDiscount)]
+        ['Discount Applied', `-${pdfCurrency(actualDiscount)}`]
       ],
       theme: 'plain',
       styles: { 
-        cellPadding: 4, 
+        cellPadding: 6, 
         fontSize: 11,
-        textColor: [80, 80, 80]
+        textColor: darkText,
+        font: 'helvetica'
       },
       columnStyles: {
-        0: { halign: 'left', fontStyle: 'normal' },
+        0: { halign: 'right', fontStyle: 'normal' },
         1: { halign: 'right', fontStyle: 'normal', cellWidth: 50 }
       },
-      margin: { left: 14, right: 14 }
+      margin: { left: 20, right: 20 }
     });
 
     currentY = doc.lastAutoTable.finalY;
@@ -225,44 +256,52 @@ const PackageCalculator = () => {
       ],
       theme: 'plain',
       styles: { 
-        cellPadding: 6, 
-        fontSize: 13, 
-        textColor: primaryColor,
-        fillColor: [246, 240, 228]
+        cellPadding: 8, 
+        fontSize: 14, 
+        textColor: [255, 255, 255],
+        fillColor: primaryBurgundy,
+        font: 'times'
       },
       columnStyles: {
         0: { halign: 'left', fontStyle: 'bold' },
         1: { halign: 'right', fontStyle: 'bold', cellWidth: 50 }
       },
-      margin: { left: 14, right: 14 }
+      margin: { left: 20, right: 20 }
     });
     
-    currentY = doc.lastAutoTable.finalY + 15;
+    currentY = doc.lastAutoTable.finalY + 20;
 
     // Notes
     if (notes.trim()) {
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(...primaryColor);
-      doc.text("Additional Notes:", 14, currentY);
+      doc.setFontSize(12);
+      doc.setFont("times", "bold");
+      doc.setTextColor(...primaryBurgundy);
+      doc.text("Additional Notes:", 20, currentY);
       
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(80, 80, 80);
-      const splitNotes = doc.splitTextToSize(notes.trim(), pageWidth - 28);
-      doc.text(splitNotes, 14, currentY + 7);
-      currentY += 7 + (splitNotes.length * 6) + 5;
+      doc.setFont("helvetica", "italic");
+      doc.setFontSize(10);
+      doc.setTextColor(...darkText);
+      const splitNotes = doc.splitTextToSize(notes.trim(), pageWidth - 40);
+      doc.text(splitNotes, 20, currentY + 8);
+      currentY += 8 + (splitNotes.length * 5) + 10;
     }
 
     // Footer
-    currentY += 10;
-    doc.setDrawColor(230, 230, 230);
-    doc.line(14, currentY, pageWidth - 14, currentY);
-    currentY += 10;
-
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "italic");
+    const footerY = Math.max(currentY + 15, pageHeight - 30);
+    
+    doc.setDrawColor(...cream);
+    doc.setLineWidth(0.5);
+    doc.line(20, footerY - 5, pageWidth - 20, footerY - 5);
+    
+    doc.setFontSize(11);
+    doc.setFont("times", "italic");
+    doc.setTextColor(...primaryBurgundy);
+    doc.text("Thank you for choosing The Marvelous Photography for your special moments.", pageWidth / 2, footerY + 2, { align: "center" });
+    
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
     doc.setTextColor(150, 150, 150);
-    doc.text("Thank you for choosing The Marvelous Photography for your special moments.", pageWidth / 2, currentY, { align: "center" });
+    doc.text("This is a computer-generated quotation and does not require a physical signature.", pageWidth / 2, footerY + 8, { align: "center" });
     
     // Save to state instead of downloading immediately
     const sanitizedName = customerName.trim().replace(/[^a-zA-Z0-9]/g, '_') || 'Customer';
