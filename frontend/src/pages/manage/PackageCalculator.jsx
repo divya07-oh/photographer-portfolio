@@ -10,7 +10,6 @@ const PackageCalculator = () => {
   const [customerPhone, setCustomerPhone] = useState('');
   const [eventType, setEventType] = useState('Wedding');
   const [selectedServices, setSelectedServices] = useState([]);
-  const [discount, setDiscount] = useState('');
   const [notes, setNotes] = useState('');
   const [eventDate, setEventDate] = useState('');
   const [optionalDate, setOptionalDate] = useState('');
@@ -53,7 +52,7 @@ const PackageCalculator = () => {
   useEffect(() => {
     setIsPdfGenerated(false);
     setPdfData(null);
-  }, [customerName, customerPhone, eventType, eventDate, optionalDate, selectedServices, discount, notes]);
+  }, [customerName, customerPhone, eventType, eventDate, optionalDate, selectedServices, notes]);
 
   const currentServices = PRICING[eventType] || [];
 
@@ -64,9 +63,7 @@ const PackageCalculator = () => {
     }, 0);
   }, [selectedServices, currentServices]);
 
-  const parsedDiscount = parseInt(discount, 10) || 0;
-  const actualDiscount = Math.min(Math.max(0, parsedDiscount), calculatedTotal);
-  const finalPackagePrice = calculatedTotal - actualDiscount;
+  const finalPackagePrice = calculatedTotal;
 
   const handleServiceToggle = (serviceName) => {
     setSelectedServices(prev => 
@@ -238,29 +235,6 @@ const PackageCalculator = () => {
     });
 
     currentY = doc.lastAutoTable.finalY + 5;
-    
-    // Totals Table
-    autoTable(doc, {
-      startY: currentY,
-      body: [
-        ['Calculated Total', pdfCurrency(calculatedTotal)],
-        ['Discount Applied', `-${pdfCurrency(actualDiscount)}`]
-      ],
-      theme: 'plain',
-      styles: { 
-        cellPadding: 6, 
-        fontSize: 11,
-        textColor: darkText,
-        font: 'helvetica'
-      },
-      columnStyles: {
-        0: { halign: 'right', fontStyle: 'normal' },
-        1: { halign: 'right', fontStyle: 'normal', cellWidth: 50 }
-      },
-      margin: { left: 20, right: 20 }
-    });
-
-    currentY = doc.lastAutoTable.finalY;
 
     // Final Price Table
     autoTable(doc, {
@@ -357,7 +331,6 @@ const PackageCalculator = () => {
     setEventDate('');
     setOptionalDate('');
     setSelectedServices([]);
-    setDiscount('');
     setNotes('');
   };
 
@@ -539,34 +512,9 @@ const PackageCalculator = () => {
             
             {/* Section 5: Final Price */}
             <div className="border-t border-cream/10 pt-6 mt-4">
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-sm tracking-wide text-cream/70 uppercase font-semibold">Calculated Total</span>
-                <span className="font-serif text-xl">{formatCurrency(calculatedTotal)}</span>
-              </div>
-              
-              <div className="flex justify-between items-center mb-6">
-                <span className="text-sm tracking-wide text-cream/70 uppercase font-semibold">Discount</span>
-                <div className="relative w-1/2 max-w-[140px]">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <IndianRupee size={14} className="text-cream/70" />
-                  </div>
-                  <input 
-                    type="number" 
-                    min="0"
-                    max={calculatedTotal}
-                    value={discount}
-                    onChange={(e) => setDiscount(e.target.value)}
-                    className="w-full bg-dark border border-cream/30 pl-8 pr-3 py-2 rounded text-cream focus:outline-none focus:border-cream focus:bg-cream/5 transition-all text-right font-serif text-lg"
-                    placeholder="0"
-                  />
-                </div>
-              </div>
-              
-              <div className="border-t border-cream/10 pt-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-base tracking-wide text-cream uppercase font-bold">Final Package Price</span>
-                  <span className="font-serif text-3xl">{formatCurrency(finalPackagePrice)}</span>
-                </div>
+              <div className="flex justify-between items-center">
+                <span className="text-base tracking-wide text-cream uppercase font-bold">Final Package Price</span>
+                <span className="font-serif text-3xl">{formatCurrency(finalPackagePrice)}</span>
               </div>
             </div>
 
