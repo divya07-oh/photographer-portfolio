@@ -275,7 +275,7 @@ const PackageCalculator = () => {
       doc.setTextColor(...primaryBurgundy);
       doc.text("Additional Notes:", 20, currentY);
       
-      doc.setFont("helvetica", "italic");
+      doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
       doc.setTextColor(...darkText);
       doc.text(splitNotes, 20, currentY + 8);
