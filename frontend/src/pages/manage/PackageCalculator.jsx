@@ -261,6 +261,15 @@ const PackageCalculator = () => {
 
     // Notes
     if (notes.trim()) {
+      const splitNotes = doc.splitTextToSize(notes.trim(), pageWidth - 40);
+      const estimatedHeight = 8 + (splitNotes.length * 5);
+      
+      // If notes exceed the page limit, add a new page
+      if (currentY + estimatedHeight > pageHeight - 40) {
+        doc.addPage();
+        currentY = 20;
+      }
+
       doc.setFontSize(12);
       doc.setFont("times", "bold");
       doc.setTextColor(...primaryBurgundy);
@@ -269,13 +278,16 @@ const PackageCalculator = () => {
       doc.setFont("helvetica", "italic");
       doc.setFontSize(10);
       doc.setTextColor(...darkText);
-      const splitNotes = doc.splitTextToSize(notes.trim(), pageWidth - 40);
       doc.text(splitNotes, 20, currentY + 8);
       currentY += 8 + (splitNotes.length * 5) + 10;
     }
 
     // Footer
-    const footerY = Math.max(currentY + 15, pageHeight - 30);
+    // If currentY is too close to the bottom, push footer to the next page
+    if (currentY > pageHeight - 40) {
+      doc.addPage();
+    }
+    const footerY = pageHeight - 30;
     
     doc.setDrawColor(...cream);
     doc.setLineWidth(0.5);
