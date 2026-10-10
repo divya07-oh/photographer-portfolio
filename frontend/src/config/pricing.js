@@ -10,6 +10,7 @@ const WEDDING_ENGAGEMENT_SERVICES = [
   { name: 'Drone Coverage (Wedding)', price: 7500, desc: 'Breathtaking aerial shots for wedding.' },
   { name: 'LED Wall (6×8)', price: 20000, desc: 'Dynamic visual display for your venue.' },
   { name: 'Canvera album 25 sheet', price: 25000, desc: 'Premium Canvera album (25 sheets).' },
+  { name: 'Karizma album', price: 25000, desc: 'Premium Karizma album.' },
   { name: 'Mini album 30 sheet', price: 3500, desc: 'Compact mini album (30 sheets).' },
   { name: 'Livestreaming (4hrs)', price: 12000, desc: 'Professional livestreaming service for 4 hours.' },
 ];
