@@ -16,7 +16,7 @@ const WEDDING_ENGAGEMENT_SERVICES = [
 ];
 
 const PRE_POST_WEDDING_SERVICES = [
-  { name: 'Candid Photography', price: 8000, desc: 'Authentic candid moments.' },
+  { name: 'Candid Photography', price: 10000, desc: 'Authentic candid moments.' },
   { name: 'Candid Video', price: 13000, desc: 'Cinematic storytelling.' },
   { name: 'Album', price: 20000, desc: 'Premium pre/post wedding photobook.' },
 ];
