@@ -1,5 +1,5 @@
 const WEDDING_ENGAGEMENT_SERVICES = [
-  { name: 'Traditional Photography', price: 10000, desc: 'Classic and timeless photography.' },
+  { name: 'Traditional Photography', price: 14000, desc: 'Classic and timeless photography.' },
   { name: 'Traditional Video', price: 12000, desc: 'Comprehensive video coverage.' },
   { name: 'Candid Photography', price: 18000, desc: 'Capturing natural, unposed moments.' },
   { name: 'Candid Video', price: 24000, desc: 'Cinematic storytelling of your day.' },
